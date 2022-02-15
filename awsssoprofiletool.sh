@@ -112,11 +112,9 @@ echo
 echo "$0 can create all profiles with default values"
 echo "or it can prompt you regarding each profile before it gets created."
 echo
-echo -n  "Would you like to be prompted for each profile? (Y/n): "
+echo -n  "Would you like to be prompted for each profile? (y/N): "
 read -r resp < /dev/tty
-if [ -z "$resp" ]; then
-    interactive=true
-elif [ "$resp" == 'n' ] || [ "$resp" == 'N' ]; then
+if [ -z "$resp" ] || [ "$resp" == 'n' ] || [ "$resp" == 'N' ]; then
     interactive=false
     awsregion=$defregion
     output=$defoutput
