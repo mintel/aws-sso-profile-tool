@@ -104,7 +104,7 @@ token="$(awk -F ' ' '{print $1}' <<< "$out")"
 # Set defaults for profiles
 
 defregion=$1
-defoutput="json"
+defoutput=""
 
 # Batch or interactive
 
@@ -225,7 +225,7 @@ while IFS=$'\t' read -r _ acctnum acctname _; do
 		echo "sso_account_id = $acctnum"
 		echo "sso_role_name = $rolename"
 		echo "region = $awsregion"
-		echo "output = $output"
+		if [ -n "$output" ]; then echo "output = $output"; fi
 	} >> "$profilefile"
 	echo "Succeeded"
 	created_profiles+=("$profilename")
