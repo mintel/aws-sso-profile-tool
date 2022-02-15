@@ -112,15 +112,17 @@ echo
 echo "$0 can create all profiles with default values"
 echo "or it can prompt you regarding each profile before it gets created."
 echo
-echo -n  "Would you like to be prompted for each profile? (y/N): "
-read -r resp < /dev/tty
-if [ -z "$resp" ] || [ "$resp" == 'n' ] || [ "$resp" == 'N' ]; then
-    interactive=false
-    awsregion=$defregion
-    output=$defoutput
-else
-    interactive=true
-fi
+while [ -z "$interactive" ]; do
+	echo -n  "Would you like to be prompted for each profile? (y/N): "
+	read -r resp < /dev/tty
+	if [ -z "$resp" ] || [ "$resp" == 'n' ] || [ "$resp" == 'N' ]; then
+		interactive=false
+		awsregion=$defregion
+		output=$defoutput
+	elif [ "$resp" == 'y' ] || [ "$resp" == 'Y' ]; then
+		interactive=true
+	fi
+done
 
 # Retrieve accounts first
 
@@ -166,13 +168,15 @@ while IFS=$'\t' read -r _ acctnum acctname _; do
     while IFS=$'\t' read -r _ _ rolename; do
 	echo
 	if $interactive ; then
-	    echo -n "Create a profile for $rolename role? (Y/n): "
-	    read -r create < /dev/tty
-	    if [ -z "$create" ]; then
-			:
-	    elif [ "$create" == 'n' ] || [ "$create" == 'N' ]; then
-			continue
-	    fi
+		while true; do
+			echo -n "Create a profile for $rolename role? (Y/n): "
+			read -r create < /dev/tty
+			if [ -z "$create" ] || [ "$create" == 'y' ] || [ "$create" == 'Y' ]; then
+				break
+			elif [ "$create" == 'n' ] || [ "$create" == 'N' ]; then
+				continue 2
+			fi
+		done
 
 	    echo
 	    echo -n "CLI default client Region [$defregion]: "
