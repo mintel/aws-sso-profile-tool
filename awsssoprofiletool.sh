@@ -207,7 +207,7 @@ do
 	    defoutput=$output
 	fi
 	
-	p="$rolename-$acctnum"
+	p="$acctname:$rolename"
 	while [ true ]; do
 	    if $interactive ;
 	    then
